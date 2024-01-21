@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <link rel="icon" href="\static\images\fevicon.png" type="image/gif" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>SafeByte Security</title>
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="\static\css\bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- font awesome style -->
+  <link href="\static\css\font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="\static\css\style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="\static\css\responsive.css" rel="stylesheet" />
+  <style>
+    #upload-container {
+      width: 50%;
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Transparent black background */
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #progress-bar {
+      width: 100%;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    #upload-progress {
+      width: 49;
+      height: 100%;
+      background-color: #293044;
+      border-radius: 5px;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    #upload-btn {
+      padding: 10px 20px;
+      background-color: #0b1023;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .output-box {
+      width: 500px;
+      /* Set the width of the box */
+      height: 40px;
+      /* Set the height of the box */
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-left: 400px;
+    }
+  </style>
+</head>
+
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index">
+            <span>SafeByte Security</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="index">Dashbord </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="about"> About</a>
+              </li>
+
+
+              <li class="nav-item">
+                <a class="nav-link" href="contact">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="logout">Log out</a>
+              </li>
+            </ul>
+            <div class="quote_btn-container">
+              <form class="form-inline">
+                <button class="btn   nav_search-btn" type="submit">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+              </form>
+              <a href="">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                  Call : 92(309)-0389688
+                </span>
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+  </div>
+
+  <!-- service section -->
+  <section class="service_section layout_padding">
+    <div id="custom-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="modal-content"></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>
+          Encryption Safeguarding
+        </h2>
+      </div>
+    </div>
+    <div id="upload-container">
+      <form method="post" enctype="multipart/form-data" id="upload-form" action="{% url 'upload_file' %}">
+        {% csrf_token %}
+        <input type="file" id="file-input" name="file" onchange="updateFileName()" style="display:none">
+        <label for="file-input" class="custom-file-upload">
+          <i class="fa fa-cloud-upload"></i> Choose File
+        </label>
+        <span id="selected-file-name"></span>
+        <br>
+        <div>
+          <textarea id="desc" id="text_input" name="text_input" placeholder="Message" rows="5"
+            style="width: 100%; padding-left: 10px; margin-top: 10px;"></textarea>
+
+        </div>
+        <br>
+        <button style="margin-top: 10px;" type="button" id="upload-btn" onclick="startFileUpload()">Encrypt
+          File</button>
+      </form>
+
+      <div id="progress-bar">
+        <div id="upload-progress">0%</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- end service section -->
+
+
+  <!-- info section -->
+
+  <section class="info_section layout_padding2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="info_contact">
+            <h4>
+              Address
+            </h4>
+            <div class="contact_link_box">
+              <a href="">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  B-17 Islamabad
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                  Call +92(309)-0389688
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>
+                  SafeByteofficial@gmail.com
+                </span>
+              </a>
+            </div>
+          </div>
+          <div class="info_social">
+            <a href="">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="info_link_box">
+            <h4>
+              Links
+            </h4>
+            <div class="info_links">
+              <a class="" href="index">
+                <img src="\static\images\nav-bullet.png" alt="">
+                Home
+              </a>
+              <a class="" href="about">
+                <img src="\static\images\nav-bullet.png" alt="">
+                About
+              </a>
+              <a class="active" href="service">
+                <img src="\static\images\nav-bullet.png" alt="">
+                Services
+              </a>
+
+              <a class="" href="contact">
+                <img src="\static\images\nav-bullet.png" alt="">
+                Contact Us
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="info_detail">
+            <h4>
+              Info
+            </h4>
+            <p>
+              If you have any questions or concerns regarding the security of your information, please feel free to
+              contact our information security team at
+            </p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-0">
+          <h4>
+            Subscribe
+          </h4>
+          <form action="#">
+            <input type="text" placeholder="Enter email" />
+            <button type="submit">
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end info section -->
+
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <p>
+        &copy; <span id="displayYear"></span> All Rights Reserved
+      </p>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+  <!-- jQery -->
+  <script src="\static\js\jquery-3.4.1.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="\static\js\bootstrap.js"></script>
+  <!-- custom js -->
+  <script src="\static\js\custom.js"></script>
+  <script>
+    // function startFileUpload() {
+    //   var form = document.getElementById('upload-form');
+    //   form.submit();
+
+    // }
+    function startFileUpload() {
+      var form = document.getElementById('upload-form');
+      var fileInput = document.getElementById('file-input');
+      var progressBar = document.getElementById('progress-bar');
+      var progressText = document.getElementById('upload-progress');
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/upload_file', true);
+      var csrftoken = getCookie('csrftoken');
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          var percentComplete = (e.loaded / e.total) * 100;
+          console.log('Progress:', percentComplete);
+          progressBar.style.width = percentComplete + '%';
+          progressBar.style.backgroundColor = '#293044';
+          progressText.innerText = percentComplete.toFixed(2) + '%';
+        }
+      };
+
+      xhr.onload = function () {
+        // File upload completed
+        progressBar.style.width = '100%';
+        progressBar.style.backgroundColor = '#293044';
+        progressText.innerText = '100%';
+
+        // Check the response status
+        if (xhr.status === 200) {
+          // Assuming the response is valid JSON
+          var responseData = JSON.parse(xhr.responseText);
+          key='he File is Encrypted Successfully Click to download Key: '+responseData.variable_value
+          // Example usage
+          openModal(key, 'media/output_image_with_hidden_message.png', 'Encrypted_image.png');
+
+        } else {
+          console.error('Error:', xhr.statusText);
+        }
+      };
+
+      // Create FormData and append the file
+      var formData = new FormData(form);
+      formData.append('file', fileInput.files[0]);
+
+      xhr.send(formData);
+    }
+
+    function handleFileUpload() {
+      var fileInput = document.getElementById('file-input');
+      var progressBar = document.getElementById('progress-bar');
+      var progressText = document.getElementById('upload-progress');
+
+      var file = fileInput.files[0];
+      var formData = new FormData();
+      formData.append('file', file);
+      var csrftoken = getCookie('csrftoken');
+
+      // Set the CSRF token in the request header
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/upload_file', true);
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          var percentComplete = (e.loaded / e.total) * 100;
+          console.log('Progress:', percentComplete);
+          progressBar.style.width = percentComplete + '%';
+          progressBar.style.backgroundColor = '#293044'; // Set the background color directly
+          progressText.innerText = percentComplete.toFixed(2) + '%';
+        }
+      };
+
+      xhr.onload = function () {
+        // File upload completed
+
+        progressBar.style.width = '100%';
+        progressBar.style.backgroundColor = '#293044'; // Set the background color directly
+        progressText.innerText = '100%';
+      };
+
+      xhr.send(formData);
+    }
+
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Check if this cookie string begins with the name we want
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    function updateFileName() {
+      var fileInput = document.getElementById('file-input');
+      var selectedFileName = document.getElementById('selected-file-name');
+
+      // Display the selected file name
+      selectedFileName.textContent = fileInput.files[0].name;
+      handleFileUpload()
+    }
+
+    function openModal(content, downloadUrl, downloadFileName) {
+      var modal = document.getElementById('custom-modal');
+      var modalContent = document.getElementById('modal-content');
+      modalContent.innerHTML = '<span class="close" onclick="closeModal()">&times;</span><h2>The Encryption Is Done</h2><p>' + content + '</p>';
+
+      // Add the download button
+      if (downloadUrl && downloadFileName) {
+        modalContent.innerHTML += '<a href="' + downloadUrl + '" download="' + downloadFileName + '"><button style="background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer">Download</button></a>';
+      }
+
+      modal.style.display = 'block';
+    }
+
+   
+
+    function closeModal() {
+      var modal = document.getElementById('custom-modal');
+      modal.style.display = 'none';
+    }
+  </script>
+
+</body>
+
+</html>
